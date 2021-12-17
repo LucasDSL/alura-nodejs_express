@@ -1,0 +1,25 @@
+{
+  "name": "alura-rest_nodejs_express",
+  "version": "1.0.0",
+  "description": "course from alura ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucasDSL/alura-rest_nodejs_express.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "alura",
+    "lucasdsl"
+  ],
+  "author": "LucasDSL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucasDSL/alura-rest_nodejs_express/issues"
+  },
+  "homepage": "https://github.com/LucasDSL/alura-rest_nodejs_express#readme"
+}
