@@ -1,5 +1,6 @@
 const { send } = require("express/lib/response")
 const moment = require("moment")
+const connection = require("../infraestrutura/conexao")
 const conexao = require("../infraestrutura/conexao")
 
 class Atendimento {
@@ -43,6 +44,18 @@ class Atendimento {
 
   listar(res) {
     const query = `SELECT * FROM atendimentos`
+    conexao.query(query, (err, results) => {
+      if (err) {
+        res.status(400).json(err)
+      } else {
+        res.status(200).json(results)
+      }
+    })
+  }
+
+  buscaPorId(id, res) {
+    const query = `SELECT * FROM atendimentos WHERE id=${id}`
+
     conexao.query(query, (err, results) => {
       if (err) {
         res.status(400).json(err)
