@@ -27,24 +27,29 @@ class Atendimento {
     const erros = validacoes.filter(validacao => !validacao.valido)
     const existemErros = erros.length
     if (existemErros) {
-      res.sendStatus(400).json(erros)
+      res.status(400).json(erros)
     } else {
       const query = "INSERT INTO Atendimentos SET ?"
       const atendimentoDatado = { ...atendimento, data_criacao, data }
       conexao.query(query, atendimentoDatado, (err, results) => {
         if (err) {
-          res.sendStatus(400).json(err)
-          console.log("houve erro na conn")
+          res.status(400).json(err)
         } else {
-          res.sendStatus(201).json(results)
-          console.log("de boa")
+          res.status(201).json(results)
         }
       })
     }
   }
 
-  mostrar() {
-
+  listar(res) {
+    const query = `SELECT * FROM atendimentos`
+    conexao.query(query, (err, results) => {
+      if (err) {
+        res.status(400).json(err)
+      } else {
+        res.status(200).json(results)
+      }
+    })
   }
 }
 
