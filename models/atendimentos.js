@@ -1,6 +1,5 @@
 const { send } = require("express/lib/response")
 const moment = require("moment")
-const connection = require("../infraestrutura/conexao")
 const conexao = require("../infraestrutura/conexao")
 
 class Atendimento {
