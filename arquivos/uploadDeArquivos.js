@@ -1,9 +1,7 @@
 const fs = require("fs")
-fs.readFile("./assets/salsicha.jpg", (err, buffer) => {
-  console.log("Imagem bufferizada")
-  console.log(buffer)
 
-  fs.writeFile("./assets/salsicha2.jpg", buffer, (err) => {
-    console.log("Imagem escrita")
-  })
-})
+module.exports = (caminho) => {
+  fs.createReadStream(caminho)
+    .pipe(fs.createWriteStream(caminh))
+    .on("finish", () => console.log("IMagem do salsicha escrita com sucesso"))
+}
