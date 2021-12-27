@@ -4,28 +4,45 @@ const axios = require("axios")
 const repositorios = require("../repositorios/atendimentos")
 
 class Atendimento {
+  constructor() {
+    this.dataEhValida = objetoDatas =>
+      moment(objetoDatas.data).isSameOrAfter(objetoDatas.data_criacao)
+
+    this.clienteEhValido = nomeCliente => nomeCliente.tamanho >= 5
+
+    this.validacoes = [
+      {
+        nome: "data",
+        valido: this.dataEhValida,
+        mensagem: "Data deve ser maior ou igual a data atual",
+      },
+      {
+        nome: "cliente",
+        valido: this.clienteEhValido,
+        mensagem: "O nome do cliente deve ter ao menos 5 caracteres.",
+      },
+    ]
+
+    this.valida = parametros => {
+      return this.validacoes.filter(campo => {
+        const { nome } = campo
+        const parametro = parametros[nome]
+        return !campo.valido(parametro)
+      })
+    }
+  }
+
   adiciona(atendimento) {
     const data = moment(atendimento.data, "DD/MM/YYYY").format(
       "YYYY-MM-DD HH:mm:ss"
     )
     const data_criacao = moment().format("YYYY-MM-DD HH:MM:SS")
-    const dataEhValida = moment(data).isSameOrAfter(data_criacao)
 
-    const clienteEhValido = atendimento.Cliente.length >= 5
-
-    const validacoes = [
-      {
-        nome: "Data",
-        valido: dataEhValida,
-        mensagem: "Data deve ser maior ou igual a data atual",
-      },
-      {
-        nome: "Nome cliente",
-        valido: clienteEhValido,
-        mensagem: "O nome do cliente deve ter ao menos 5 caracteres.",
-      },
-    ]
-    const erros = validacoes.filter(validacao => !validacao.valido)
+    const parametros = {
+      data: { data, data_criacao },
+      cliente: { tamanho: atendimento.Cliente.length },
+    }
+    const erros = this.valida(parametros)
     const existemErros = erros.length
     if (existemErros) {
       return new Promise((resolve, reject) => {
@@ -46,50 +63,25 @@ class Atendimento {
     })
   }
 
-  buscaPorId(id, res) {
-    const query = `SELECT * FROM atendimentos WHERE id=${id}`
-
-    conexao.query(query, async (err, results) => {
-      const atendimento = results[0]
-      const cpf = atendimento.Cliente
-      if (err) {
-        res.status(400).json(err)
-      } else {
-        // Pega informação sobre o cliente na API de cpf do axios
-        // (Consumo de API dentro da atual API)
-        const { data } = await axios.get(`http://localhost:8082/${cpf}`)
-        atendimento.Cliente = data
-        res.status(200).json(atendimento)
-      }
+  buscaPorId(id) {
+    return repositorios.buscarPorId(id).then(results => {
+      return results
     })
   }
 
-  alterar(id, valores, res) {
-    const query = `UPDATE atendimentos SET ? WHERE id=${id}`
+  alterar(id, valores) {
     if (valores.data) {
       valores.data = moment(valores.data, "DD/MM/YYYY").format(
         "YYYY-MM-DD HH:MM:SS"
       )
     }
-    conexao.query(query, [valores], (err, results) => {
-      if (err) {
-        res.status(400).json(err)
-      } else {
-        res.status(200).json({ ...valores, id })
-      }
+    return repositorios.alterar(id, valores).then(results => {
+      return results
     })
   }
 
-  deleta(id, res) {
-    const query = `DELETE FROM atendimentos WHERE id=${id}`
-
-    conexao.query(query, (err, results) => {
-      if (err) {
-        res.status(400).json(err)
-      } else {
-        res.status(200).json({ id: id })
-      }
-    })
+  deleta(id) {
+    return repositorios.deleta(id)
   }
 }
 

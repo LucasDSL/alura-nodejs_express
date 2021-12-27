@@ -1,4 +1,5 @@
 const query = require("../infraestrutura/database/queries")
+const moment = require("moment")
 
 class Atendimento {
   adiciona(atendimento) {
@@ -12,12 +13,19 @@ class Atendimento {
   }
 
   buscarPorId(id) {
-    const sql = ""
+    const sql = `SELECT * FROM atendimentos WHERE id=?`
+    return query(sql, id)
   }
 
-  alterar(id, valores) {}
+  alterar(id, valores) {
+    const sql = `UPDATE atendimentos SET ? WHERE id=${id}`
+    return query(sql, valores)
+  }
 
-  deleta(id) {}
+  deleta(id) {
+    const sql = `DELETE FROM atendimentos WHERE id=?`
+    return query(sql, id)
+  }
 }
 
 module.exports = new Atendimento()
