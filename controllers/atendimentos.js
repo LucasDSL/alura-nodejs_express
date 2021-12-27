@@ -1,8 +1,7 @@
 const Atendimentos = require("../models/atendimentos")
-
 module.exports = app => {
   app.get("/atendimentos", (req, res) => {
-    Atendimentos.listar(res)
+    Atendimentos.listar()
   })
   app.get("/atendimentos/:id", (req, res) => {
     const id = parseInt(req.params.id)
@@ -11,7 +10,11 @@ module.exports = app => {
 
   app.post("/atendimentos", (req, res) => {
     const atendimentoAtual = req.body
-    Atendimentos.adiciona(atendimentoAtual, res)
+    Atendimentos.adiciona(atendimentoAtual)
+      .then(atendimentoCadastrado =>
+        res.status(201).json(atendimentoCadastrado)
+      )
+      .catch(error => res.status(400).json(error))
   })
 
   app.patch("/atendimentos/:id", (req, res) => {
