@@ -1,5 +1,6 @@
 const moment = require("moment")
 const conexao = require("../infraestrutura/conexao")
+const axios = require("axios")
 
 class Atendimento {
   adiciona(atendimento, res) {
@@ -34,7 +35,7 @@ class Atendimento {
         if (err) {
           res.status(400).json(err)
         } else {
-          res.status(201).json(results)
+          res.status(201).json(atendimentoDatado)
         }
       })
     }
@@ -54,11 +55,17 @@ class Atendimento {
   buscaPorId(id, res) {
     const query = `SELECT * FROM atendimentos WHERE id=${id}`
 
-    conexao.query(query, (err, results) => {
+    conexao.query(query, async (err, results) => {
+      const atendimento = results[0]
+      const cpf = atendimento.Cliente
       if (err) {
         res.status(400).json(err)
       } else {
-        res.status(200).json(results)
+        // Pega informação sobre o cliente na API de cpf do axios
+        // (Consumo de API dentro da atual API)
+        const { data } = await axios.get(`http://localhost:8082/${cpf}`)
+        atendimento.Cliente = data
+        res.status(200).json(atendimento)
       }
     })
   }

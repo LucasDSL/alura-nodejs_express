@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/LucasDSL/alura-rest_nodejs_express#readme",
   "dependencies": {
+    "axios": "^0.24.0",
     "consign": "^0.1.6",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
