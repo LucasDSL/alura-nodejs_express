@@ -44,5 +44,5 @@ obs: substituir pelos respectivos nomes sem "<>"
 ```txt
 npm start
 ```
-Tudo pronto! Já é possível através de programas como Postman ou Insmonia fazer diferentes requisições para o servidor. \
+Tudo pronto! Já é possível através de programas como Postman ou Insomnia fazer diferentes requisições para o servidor. \
 Para melhor referência ver aquivos na pasta "models".
