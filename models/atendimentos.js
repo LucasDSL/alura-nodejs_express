@@ -1,13 +1,13 @@
 const moment = require("moment")
-const conexao = require("../infraestrutura/conexao")
+const conexao = require("../infraestrutura/database/conexao")
 const axios = require("axios")
 
 class Atendimento {
   adiciona(atendimento, res) {
     const data = moment(atendimento.data, "DD/MM/YYYY").format(
-      "YYYY-MM-DD HH:MM:SS"
+      "YYYY-MM-DD HH:mm:ss"
     )
-    const data_criacao = moment().format("YYYY-MM-DD HH:mm:ss")
+    const data_criacao = moment().format("YYYY-MM-DD HH:MM:SS")
     const dataEhValida = moment(data).isSameOrAfter(data_criacao)
 
     const clienteEhValido = atendimento.Cliente.length >= 5
