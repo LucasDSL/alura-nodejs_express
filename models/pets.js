@@ -1,23 +1,14 @@
-const conexao = require("../infraestrutura/database/conexao")
 const uploadDeAquivos = require("../infraestrutura/arquivos/uploadDeArquivos")
+const repositorios = require("../repositorios/pets")
 
 class Pet {
-  adicionar(pet, res) {
-    const query = `INSERT INTO Pets SET ?`
-
+  adicionar(pet) {
     uploadDeAquivos(pet.imagem, pet.nome, (err, novoCaminho) => {
       if (err) {
-        res.status(400).json(err)
+        return new Promise((resolve, reject) => reject(err))
       } else {
         const novoPet = { nome: pet.nome, imagem: novoCaminho }
-        conexao.query(query, novoPet, (err, result, fields) => {
-          if (err) {
-            console.log(err)
-            res.status(400).json({ err })
-          } else {
-            res.status(200).json(novoPet)
-          }
-        })
+        return repositorios.adicionar(novoPet)
       }
     })
   }
